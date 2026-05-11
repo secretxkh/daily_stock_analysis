@@ -56,6 +56,19 @@ jobs:
         run: |
           mkdir -p data logs reports
       
+      - name: 通知渠道连通性检查
+        env:
+          SERVERCHAN3_SENDKEY: ${{ secrets.SERVERCHAN3_SENDKEY }}
+        run: |
+          echo "=== 检查 Server酱3 配置 ==="
+          if [ -n "$SERVERCHAN3_SENDKEY" ]; then
+            echo "SERVERCHAN3_SENDKEY: 已配置 (长度: ${#SERVERCHAN3_SENDKEY})"
+            echo "测试发送..."
+            curl -s -X POST "https://21118.push.ft07.com/send/${SERVERCHAN3_SENDKEY}.send"               -H "Content-Type: application/json;charset=utf-8"               -d '{"title":"GitHub Actions 连通性测试","desp":"如果你收到这条消息，说明 Server酱3 在 Actions 环境中可以正常工作。"}'
+          else
+            echo "SERVERCHAN3_SENDKEY: 未配置！"
+          fi
+
       - name: 执行股票分析
         env:
           # ==========================================
